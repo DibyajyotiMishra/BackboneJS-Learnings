@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- soft dependency -->
+    <script src="js/jquery-3.7.1.min.js"></script> 
+    <!-- hard dependency -->
+    <script src="js/underscore-umd-min.js"></script>
+    <script src="js/backbone-min.js"></script>
+    <title>Document</title>
+
+</head>
+<body>
+    <div id="content"></div>
+    <div id="event"></div>
+    <div id="model-template"></div>
+    <div id="model"></div>
+
+    <!-- Underscore templates -->
+    <script type="text/template" id="fView-template"> <!-- text/html -->
+        This is coming from script tags
+        <br />
+        Hello World
+    </script>
+
+    <!-- Backbone Views -->
+    <script>
+        $(document).ready(function() {
+           var FirstView = Backbone.View.extend({
+                el: "#content",
+                // template: _.template($("#fView-template").html()),
+                initialize: function() {},
+                render: function() {
+                    var template = _.template($("#fView-template").html())
+                    this.$el.html(template())
+                    console.log("First View")
+                    return this; 
+                }
+           })
+
+           var view = new FirstView()
+           view.render()
+        })
+    </script>
+
+    <!-- backbone events -->
+
+    <script type="text/html" id="event-html">
+        <button id="my-btn">Click</button>
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var EventsView = Backbone.View.extend({
+                el: "#event",
+                template: _.template($("#event-html").html()),
+                events: {
+                    "click #my-btn" : "onClick" // <EVENT-NAME> <SELECTOR> : cb 
+                },
+                onClick: function(){
+                    console.log("this came from button's click event")
+                },
+                render: function() {
+                    this.$el.html(this.template())
+                    console.log("inside events script")
+                }
+            })
+
+            var eView = new EventsView();
+            eView.render()
+        })
+    </script>
+
+    <!-- Backbone Models and passing data to view -->
+     <script>
+            var FirstModel = Backbone.Model.extend({
+                initialize: function() {
+                    console.log("First Model")
+                }
+            })
+
+            var fModel = new FirstModel()
+            fModel.set("name", "Dibya")
+     </script> 
+
+    <!-- template  -->
+     <script type="text/html" id="data">
+        <h1>the following values are added by backbone </h1>
+        <table>
+            <thead>
+                <th>Name</th>
+                <th>role</th>
+                <th>Company</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><%= name %></td>
+                    <td><%= profession %></td>
+                    <td><%= company %></td>
+                </tr>
+            </tbody>
+        </table>
+     </script>
+
+     <script>
+        var Model = Backbone.Model.extend({
+            initialize: function() {
+                console.log("Model created")
+            }
+        })
+
+        var model = new Model({
+            name: "Dibya",
+            profession: "Software Engineer",
+            company: "Five9"
+        })
+
+        // model.set({
+        //     name: "Dibya",
+        //     profession: "Software Engineer",
+        //     company: "Five9"
+        // })
+
+        var View = Backbone.View.extend({
+            el: "#model-template",
+            model: model,
+            template: _.template($("#data").html()),
+            initialize: function() {
+                this.render()
+            },
+            render: function() {
+                console.log("View Created")
+                console.log(this.model.toJSON())
+                this.$el.html(this.template(this.model.toJSON()))
+            }
+        })
+
+        // var view = new View({
+        //     model: model
+        // });
+
+        var view = new View()
+
+     </script>
+
+     <!-- Backbone models + props -->
+      <script>
+        var MyModel = Backbone.Model.extend({
+            initialize: function() {
+                console.log("Model + View + Event")
+                this.bind("change:name", function() {
+                    console.log("Model changed..")
+                })
+            },
+            validate: function(attribute) {
+                if(attribute.name.toString().length < 2) {
+                    return "Name is not valid"
+                }
+
+                if(!attribute.task) {
+                    return "Some task is needed."
+                }
+            }
+        })
+
+        var myModel = new MyModel({
+            name: "Babul",
+            task: "Learning Backbone JS"
+        })
+
+        var MyView = Backbone.View.extend({
+            model: myModel,
+            initialize: function () {
+                this.render()
+            },
+            render: function() {
+                if(this.model.isValid()) {
+                    console.log("Valid Model");   
+                } else {
+                    console.error(this.model.validationError);    
+                }
+
+                this.model.on("change", function() {
+                    console.log("Change captured inside View");
+                })
+            }
+        })
+
+        var myView = new MyView()
+      </script>
+</body>
+</html>
+
+<!-- 
+    To perform computation: <% calc() %>
+    To display into the DOM <%= variable %> 
+-->
