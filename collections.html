@@ -11,5 +11,32 @@
 <body>
     <div id="content"></div>
     <script src="./collections.js"></script>
+    <!-- passing collection objects to underscore.js templates -->
+    <script type="text/html" id="collection-template">
+        <table>
+            <thead>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Team</th>
+            </thead>
+            <tbody>
+                <% _.each(players, function(player) { %>
+                    <tr>
+                        <td>
+                            <%= player.name %>
+                        </td>
+                        <td>
+                            <%= player.age %>
+                        </td>
+                        <td>
+                            <%= player.team %>
+                        </td>
+                    </tr>
+        
+                <% })%>
+            </tbody>
+        </table>
+    </script>
+    <script src="./collection_templates.js"></script>
 </body>
 </html>
