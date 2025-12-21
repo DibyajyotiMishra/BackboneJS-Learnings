@@ -1,0 +1,16 @@
+{
+  "name": "backbone-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "scripts": {
+    "start": "node api.js"
+  },
+  "author": "Dibyajyoti Mishra",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "body-parser": "^2.2.1",
+    "express": "^5.2.1"
+  }
+}
